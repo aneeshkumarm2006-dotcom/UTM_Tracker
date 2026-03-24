@@ -136,15 +136,15 @@ Goal: React app routing, auth state, and API client wired up.
 
 Goal: Complete public home page. Refer to DESIGN.md Section 3.
 
-- [ ] **6.1** Create `src/pages/Home.jsx` as the root layout with Navbar, sections, and Footer
+- [x] **6.1** Create `src/pages/Home.jsx` as the root layout with Navbar, sections, and Footer
 
-- [ ] **6.2** Build **Navbar**:
+- [x] **6.2** Build **Navbar**:
   - Logo: wordmark + small indigo dot
   - Links: Docs, Pricing (disabled with "Coming soon" tooltip), Login
   - `Get Started` button → `/register`
   - Sticky, backdrop blur on scroll
 
-- [ ] **6.3** Build **Hero section**:
+- [x] **6.3** Build **Hero section**:
   - H1 (max 680px, centered): "Know exactly which ad drove your leads"
   - Subtext in muted color
   - Two CTA buttons: `Start Free` → `/register`, `View Docs ↗` → scrolls to API section on home or links to `/docs`
@@ -153,26 +153,26 @@ Goal: Complete public home page. Refer to DESIGN.md Section 3.
     - Typewriter animation on load (use `useEffect` + `setInterval`, 18ms per char)
     - Copy button in top-right
 
-- [ ] **6.4** Build **How It Works** section (3 horizontal cards):
+- [x] **6.4** Build **How It Works** section (3 horizontal cards):
   - Cards: "Register + get key", "Configure fields", "Paste + track"
   - Large muted step number watermark behind each card
   - Icons from Lucide: `Key`, `Sliders`, `Code2`
 
-- [ ] **6.5** Build **Features Grid** (2×2):
+- [x] **6.5** Build **Features Grid** (2×2):
   - Any Form Fields, UTM Attribution, Session-Safe Tracking, CSV Export
   - Icon + title + 1-line description per card
   - Cards use `--bg-surface` with subtle border
 
-- [ ] **6.6** Build **CTA Banner** section:
+- [x] **6.6** Build **CTA Banner** section:
   - "Start tracking in 5 minutes."
   - Single `Create Free Account` button → `/register`
 
-- [ ] **6.7** Build **Footer**:
+- [x] **6.7** Build **Footer**:
   - Left: © 2026 Nexorel
   - Right: Docs · Privacy · contact email
   - Single row, border top
 
-- [ ] **6.8** Apply global CSS variables from DESIGN.md Section 2 in `index.css` or Tailwind config — colors, font (use a characterful font, NOT Inter/Roboto/Arial, pick something fitting for a dev-tool SaaS)
+- [x] **6.8** Apply global CSS variables from DESIGN.md Section 2 in `index.css` or Tailwind config — colors, font (use a characterful font, NOT Inter/Roboto/Arial, pick something fitting for a dev-tool SaaS)
 
 ---
 

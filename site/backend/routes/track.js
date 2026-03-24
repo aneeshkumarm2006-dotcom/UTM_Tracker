@@ -17,7 +17,7 @@ const trackLimiter = rateLimit({
   message: { error: 'Rate limit exceeded. Try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
-  validate: { ip: false }
+  validate: { ip: false, keyGeneratorIpFallback: false }
 });
 
 // --- POST /api/track ---

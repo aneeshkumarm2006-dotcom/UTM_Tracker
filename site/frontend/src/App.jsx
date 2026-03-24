@@ -11,6 +11,7 @@ import Overview from '@/pages/dashboard/Overview';
 import Configure from '@/pages/dashboard/Configure';
 import Snippet from '@/pages/dashboard/Snippet';
 import ApiKey from '@/pages/dashboard/ApiKey';
+import DashboardLayout from '@/layouts/DashboardLayout';
 
 export default function App() {
   return (
@@ -23,11 +24,13 @@ export default function App() {
 
         {/* ── Protected Routes ── */}
         <Route element={<ProtectedRoute />}>
-          {/* /dashboard → redirect to /dashboard (Overview) */}
-          <Route path="/dashboard" element={<Overview />} />
-          <Route path="/dashboard/configure" element={<Configure />} />
-          <Route path="/dashboard/snippet" element={<Snippet />} />
-          <Route path="/dashboard/apikey" element={<ApiKey />} />
+          <Route element={<DashboardLayout />}>
+            {/* /dashboard → redirect to /dashboard (Overview) */}
+            <Route path="/dashboard" element={<Overview />} />
+            <Route path="/dashboard/configure" element={<Configure />} />
+            <Route path="/dashboard/snippet" element={<Snippet />} />
+            <Route path="/dashboard/apikey" element={<ApiKey />} />
+          </Route>
         </Route>
 
         {/* Catch-all → redirect to home */}

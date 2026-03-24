@@ -180,18 +180,18 @@ Goal: Complete public home page. Refer to DESIGN.md Section 3.
 
 Goal: Login and Register pages, wired to API.
 
-- [ ] **7.1** Create `src/pages/Register.jsx`:
+- [x] **7.1** Create `src/pages/Register.jsx`:
   - Centered card, 420px
   - Email + password fields using React Hook Form
   - On success: save token + apiKey to Zustand, redirect to `/dashboard`
   - Show field-level errors (from API 400 responses)
 
-- [ ] **7.2** Create `src/pages/Login.jsx`:
+- [x] **7.2** Create `src/pages/Login.jsx`:
   - Same layout as Register
   - On success: same Zustand + redirect flow
   - "Don't have an account? Register" link
 
-- [ ] **7.3** Create shared `src/components/AuthCard.jsx` — reusable wrapper used by both pages (card container, logo, heading slot, form slot)
+- [x] **7.3** Create shared `src/components/AuthCard.jsx` — reusable wrapper used by both pages (card container, logo, heading slot, form slot)
 
 ---
 
@@ -199,18 +199,18 @@ Goal: Login and Register pages, wired to API.
 
 Goal: Sidebar navigation layout wrapping all dashboard pages.
 
-- [ ] **8.1** Create `src/components/Sidebar.jsx`:
+- [x] **8.1** Create `src/components/Sidebar.jsx`:
   - Nav items: Overview, Configure, Snippet, API Key
   - Active state: indigo left border + accent text color
   - Bottom: user email + Logout button (calls `logout()` from Zustand, redirects to `/`)
   - Width: 220px, fixed
 
-- [ ] **8.2** Create `src/layouts/DashboardLayout.jsx`:
+- [x] **8.2** Create `src/layouts/DashboardLayout.jsx`:
   - Sidebar (left) + main content area (right)
   - Top bar: breadcrumb based on current route + user email (right-aligned)
   - Wraps all `/dashboard/*` routes
 
-- [ ] **8.3** Collapse sidebar to icon-only bottom bar on mobile (< 768px)
+- [x] **8.3** Collapse sidebar to icon-only bottom bar on mobile (< 768px)
 
 ---
 

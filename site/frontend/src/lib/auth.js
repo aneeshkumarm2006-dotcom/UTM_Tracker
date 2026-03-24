@@ -5,13 +5,14 @@ export const useAuthStore = create(
   persist(
     (set) => ({
       token: null,
-      apiKey: null,
+      email: null,
       isAuthenticated: false,
 
-      login: (token, apiKey) =>
+      login: (token, apiKey, email) =>
         set({
           token,
           apiKey,
+          email,
           isAuthenticated: true,
         }),
 
@@ -19,6 +20,7 @@ export const useAuthStore = create(
         set({
           token: null,
           apiKey: null,
+          email: null,
           isAuthenticated: false,
         }),
 
@@ -30,6 +32,7 @@ export const useAuthStore = create(
       partialize: (state) => ({
         token: state.token,
         apiKey: state.apiKey,
+        email: state.email,
         isAuthenticated: state.isAuthenticated,
       }),
     }

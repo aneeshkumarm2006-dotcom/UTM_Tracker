@@ -67,6 +67,7 @@ router.post('/register', validate(registerSchema), async (req, res) => {
     res.status(201).json({
       token,
       apiKey,
+      email: user.email,
       message: 'Account created'
     });
   } catch (error) {
@@ -101,7 +102,8 @@ router.post('/login', loginLimiter, validate(loginSchema), async (req, res) => {
 
     res.status(200).json({
       token,
-      apiKey: user.apiKey
+      apiKey: user.apiKey,
+      email: user.email
     });
   } catch (error) {
     console.error('Login Error:', error);

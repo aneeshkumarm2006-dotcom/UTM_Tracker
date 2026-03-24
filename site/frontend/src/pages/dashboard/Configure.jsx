@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useConfig, useSaveConfig } from '@/hooks/useConfig';
 import FieldRow from '@/components/FieldRow';
+import PageTitle from '@/components/PageTitle';
 import { Plus, Save, AlertTriangle, Loader2, Check } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -66,6 +67,7 @@ export default function Configure() {
   if (configLoading) {
     return (
       <div className="space-y-6">
+        <PageTitle title="Configure" />
         <div className="h-8 w-48 bg-[var(--bg-surface)] rounded-lg animate-pulse" />
         <div className="space-y-4">
           {[...Array(4)].map((_, i) => (
@@ -78,6 +80,11 @@ export default function Configure() {
 
   return (
     <div className="space-y-8 max-w-2xl">
+      <PageTitle
+        title="Configure"
+        description="Set your trigger page, button ID and field mappings."
+      />
+
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">
@@ -133,8 +140,8 @@ export default function Configure() {
             Map each form field to a label. The "Key" is what you'll see in your dashboard. The "DOM Element ID" is the HTML <code className="text-[var(--code-text)]">id</code> of the form input.
           </p>
 
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-3 px-1">
+          {/* Header — hidden on very small screens, fields stack instead */}
+          <div className="hidden sm:flex items-center gap-3 mb-3 px-1">
             <div className="flex-1 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
               Key (your label)
             </div>
@@ -191,7 +198,7 @@ export default function Configure() {
         ) : (
           <Save className="w-4 h-4" />
         )}
-        Save Configuration
+        {saveConfig.isPending ? 'Saving...' : 'Save Configuration'}
       </button>
     </div>
   );

@@ -5,6 +5,7 @@ import { Loader2, AlertCircle } from 'lucide-react';
 import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
 import AuthCard from '@/components/AuthCard';
+import PageTitle from '@/components/PageTitle';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -40,6 +41,7 @@ export default function Register() {
       title="Create an Account"
       subtitle="Start tracking your UTM conversions in minutes."
     >
+      <PageTitle title="Register" description="Create a free trackUTM account." />
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {serverError && (
           <div className="p-3 rounded bg-red-500/10 border border-red-500/20 flex items-center gap-2 text-sm text-red-500">

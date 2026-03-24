@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { useConversions } from '@/hooks/useConversions';
 import ConversionRow from '@/components/ConversionRow';
-import { Download, ChevronLeft, ChevronRight, Search, Inbox } from 'lucide-react';
+import PageTitle from '@/components/PageTitle';
+import { Download, ChevronLeft, ChevronRight, Search, Inbox, Loader2 } from 'lucide-react';
 import api from '@/lib/api';
+import { toast } from 'sonner';
 
 export default function Overview() {
   const [page, setPage] = useState(1);
   const [source, setSource] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  const [exporting, setExporting] = useState(false);
 
   const filters = {
     page,
@@ -25,6 +28,7 @@ export default function Overview() {
   const totalPages = Math.ceil(total / 50) || 1;
 
   const handleExportCSV = async () => {
+    setExporting(true);
     try {
       const params = {};
       if (source) params.source = source;
@@ -45,8 +49,11 @@ export default function Overview() {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
+      toast.success('CSV exported successfully');
     } catch {
-      // silent fail
+      toast.error('Failed to export CSV');
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -61,6 +68,11 @@ export default function Overview() {
 
   return (
     <div className="space-y-6">
+      <PageTitle
+        title="Conversions"
+        description="View and filter your UTM conversion data."
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
@@ -75,10 +87,14 @@ export default function Overview() {
         </div>
         <button
           onClick={handleExportCSV}
-          disabled={total === 0}
+          disabled={total === 0 || exporting}
           className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--bg-border)] text-sm font-medium text-[var(--text-primary)] hover:border-[var(--accent-indigo)] hover:text-[var(--accent-indigo)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          <Download className="w-4 h-4" />
+          {exporting ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Download className="w-4 h-4" />
+          )}
           Export CSV
         </button>
       </div>
@@ -144,16 +160,42 @@ export default function Overview() {
         )}
       </div>
 
-      {/* Table */}
+      {/* Table / Card View */}
       <div className="rounded-xl border border-[var(--bg-border)] overflow-hidden bg-[var(--bg-surface)]/30">
         {isLoading ? (
-          <div className="p-8 space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className="h-12 rounded-lg bg-[var(--bg-surface)] animate-pulse"
-                style={{ animationDelay: `${i * 100}ms` }}
-              />
+          /* ── Loading Skeletons ── */
+          <div className="p-4 space-y-3">
+            {/* Skeleton table header */}
+            <div className="hidden sm:flex items-center gap-4 px-4 py-3 border-b border-[var(--bg-border)]">
+              {[120, 80, 80, 140, 100].map((w, i) => (
+                <div
+                  key={i}
+                  className="h-3 rounded bg-[var(--bg-border)] animate-pulse"
+                  style={{ width: w, animationDelay: `${i * 60}ms` }}
+                />
+              ))}
+            </div>
+            {/* Skeleton rows */}
+            {[...Array(6)].map((_, i) => (
+              <div key={i}>
+                {/* Desktop skeleton row */}
+                <div className="hidden sm:flex items-center gap-4 px-4 py-4">
+                  <div className="h-4 w-20 rounded bg-[var(--bg-surface)] animate-pulse" style={{ animationDelay: `${i * 80}ms` }} />
+                  <div className="h-6 w-16 rounded-full bg-[var(--bg-surface)] animate-pulse" style={{ animationDelay: `${i * 80 + 30}ms` }} />
+                  <div className="h-4 w-12 rounded bg-[var(--bg-surface)] animate-pulse" style={{ animationDelay: `${i * 80 + 60}ms` }} />
+                  <div className="h-4 w-28 rounded bg-[var(--bg-surface)] animate-pulse" style={{ animationDelay: `${i * 80 + 90}ms` }} />
+                  <div className="h-4 w-24 rounded bg-[var(--bg-surface)] animate-pulse" style={{ animationDelay: `${i * 80 + 120}ms` }} />
+                </div>
+                {/* Mobile skeleton card */}
+                <div className="sm:hidden p-4 rounded-lg bg-[var(--bg-surface)] animate-pulse space-y-3" style={{ animationDelay: `${i * 100}ms` }}>
+                  <div className="flex items-center justify-between">
+                    <div className="h-5 w-16 rounded-full bg-[var(--bg-border)]" />
+                    <div className="h-3 w-14 rounded bg-[var(--bg-border)]" />
+                  </div>
+                  <div className="h-3 w-32 rounded bg-[var(--bg-border)]" />
+                  <div className="h-3 w-24 rounded bg-[var(--bg-border)]" />
+                </div>
+              </div>
             ))}
           </div>
         ) : isError ? (
@@ -175,7 +217,8 @@ export default function Overview() {
           </div>
         ) : (
           <>
-            <div className="overflow-x-auto">
+            {/* ── Desktop Table ── */}
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-[var(--bg-border)] bg-[var(--bg-surface)]/50">
@@ -202,6 +245,13 @@ export default function Overview() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* ── Mobile Card View (<sm / <480px-ish) ── */}
+            <div className="sm:hidden divide-y divide-[var(--bg-border)]">
+              {conversions.map((conv) => (
+                <MobileConversionCard key={conv._id} conversion={conv} />
+              ))}
             </div>
 
             {/* Pagination */}
@@ -233,6 +283,91 @@ export default function Overview() {
           </>
         )}
       </div>
+    </div>
+  );
+}
+
+/* ── Mobile Conversion Card ── */
+import UtmBadge from '@/components/UtmBadge';
+import { ChevronDown } from 'lucide-react';
+
+function formatTimestamp(ts) {
+  if (!ts) return '—';
+  const date = new Date(ts);
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffHr = Math.floor(diffMs / 3600000);
+  const diffDay = Math.floor(diffMs / 86400000);
+
+  if (diffMin < 1) return 'Just now';
+  if (diffMin < 60) return `${diffMin}m ago`;
+  if (diffHr < 24) return `${diffHr}h ago`;
+  if (diffDay < 7) return `${diffDay}d ago`;
+
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined,
+  });
+}
+
+function MobileConversionCard({ conversion }) {
+  const [expanded, setExpanded] = useState(false);
+  const captured = conversion.captured || {};
+  const capturedKeys = Object.keys(captured);
+
+  return (
+    <div
+      className="p-4 cursor-pointer hover:bg-[var(--bg-surface)]/50 transition-colors"
+      onClick={() => setExpanded((e) => !e)}
+    >
+      {/* Top row: badge + timestamp */}
+      <div className="flex items-center justify-between mb-2">
+        <UtmBadge source={conversion.utm_source} />
+        <span className="text-xs text-[var(--text-muted)]">
+          {formatTimestamp(conversion.timestamp)}
+        </span>
+      </div>
+
+      {/* Campaign + Medium */}
+      <div className="space-y-1 mb-2">
+        {conversion.utm_campaign && (
+          <p className="text-sm text-[var(--text-primary)] truncate">
+            {conversion.utm_campaign}
+          </p>
+        )}
+        {conversion.utm_medium && (
+          <p className="text-xs text-[var(--text-muted)]">
+            {conversion.utm_medium}
+          </p>
+        )}
+      </div>
+
+      {/* Captured toggle */}
+      {capturedKeys.length > 0 && (
+        <div className="flex items-center gap-1 text-xs text-[var(--text-muted)]">
+          <span>{capturedKeys.length} captured field{capturedKeys.length !== 1 ? 's' : ''}</span>
+          <ChevronDown
+            className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
+          />
+        </div>
+      )}
+
+      {/* Expanded captured fields */}
+      {expanded && capturedKeys.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {capturedKeys.map((key) => (
+            <span
+              key={key}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-base)] border border-[var(--bg-border)] text-xs"
+            >
+              <span className="text-[var(--text-muted)] font-medium">{key}:</span>
+              <span className="text-[var(--text-primary)]">{captured[key]}</span>
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

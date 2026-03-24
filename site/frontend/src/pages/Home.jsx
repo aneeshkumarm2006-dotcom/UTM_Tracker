@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import PageTitle from '@/components/PageTitle';
 import {
   Key,
   Sliders,
@@ -507,6 +508,10 @@ function Footer() {
 export default function Home() {
   return (
     <div className="min-h-screen bg-[var(--bg-base)]">
+      <PageTitle
+        title={null}
+        description="Paste one snippet. Track UTM-to-form conversions across any WordPress site. No GA4, no GTM, no complex setup."
+      />
       <Navbar />
       <Hero />
       <HowItWorks />

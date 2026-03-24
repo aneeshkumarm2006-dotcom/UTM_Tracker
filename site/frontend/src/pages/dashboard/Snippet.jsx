@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
 import CodeBlock from '@/components/CodeBlock';
+import PageTitle from '@/components/PageTitle';
 import { AlertTriangle, Copy, Check, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -41,6 +42,11 @@ export default function Snippet() {
 
   return (
     <div className="space-y-8 max-w-3xl">
+      <PageTitle
+        title="Snippet"
+        description="Copy your auto-generated tracking snippet and paste it into your website."
+      />
+
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">

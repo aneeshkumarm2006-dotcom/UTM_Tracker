@@ -5,6 +5,7 @@ import { Loader2, AlertCircle } from 'lucide-react';
 import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
 import AuthCard from '@/components/AuthCard';
+import PageTitle from '@/components/PageTitle';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -40,6 +41,7 @@ export default function Login() {
       title="Welcome Back"
       subtitle="Log in to manage your UTM conversions."
     >
+      <PageTitle title="Log In" description="Log in to your trackUTM dashboard." />
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {serverError && (
           <div className="p-3 rounded bg-red-500/10 border border-red-500/20 flex items-center gap-2 text-sm text-red-500">

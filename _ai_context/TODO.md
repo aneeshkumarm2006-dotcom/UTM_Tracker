@@ -296,15 +296,15 @@ Goal: All four dashboard views functional.
 
 Goal: Global UX polish, shared utilities.
 
-- [ ] **10.1** Create `src/components/Toast.jsx` — configure Sonner `<Toaster>` globally in `App.jsx`, expose `toast.success()` / `toast.error()` helper
-- [ ] **10.2** Add loading skeletons to Conversions table (show while React Query is fetching)
-- [ ] **10.3** Add loading spinner to all submit buttons (disable button + show spinner while API call is in-flight)
-- [ ] **10.4** Make entire dashboard responsive:
+- [x] **10.1** Create `src/components/Toast.jsx` — configure Sonner `<Toaster>` globally in `App.jsx`, expose `toast.success()` / `toast.error()` helper
+- [x] **10.2** Add loading skeletons to Conversions table (show while React Query is fetching)
+- [x] **10.3** Add loading spinner to all submit buttons (disable button + show spinner while API call is in-flight)
+- [x] **10.4** Make entire dashboard responsive:
   - Sidebar → bottom icon bar on < 768px
   - Table → card-per-row layout on < 480px
   - Configure field rows → stack vertically on mobile
-- [ ] **10.5** Add `<title>` meta tags per page using React Router's approach or `react-helmet-async`
-- [ ] **10.6** Test all error states: wrong password, duplicate email, expired JWT, invalid API key, config not saved
+- [x] **10.5** Add `<title>` meta tags per page using React Router's approach or `react-helmet-async`
+- [x] **10.6** Test all error states: wrong password, duplicate email, expired JWT, invalid API key, config not saved
 
 ---
 

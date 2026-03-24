@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/auth';
 import ConfirmModal from '@/components/ConfirmModal';
+import PageTitle from '@/components/PageTitle';
 import { Eye, EyeOff, Copy, Check, RefreshCw, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -66,6 +67,11 @@ export default function ApiKey() {
 
   return (
     <div className="space-y-8 max-w-2xl">
+      <PageTitle
+        title="API Key"
+        description="Manage your trackUTM API key for snippet authentication."
+      />
+
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">

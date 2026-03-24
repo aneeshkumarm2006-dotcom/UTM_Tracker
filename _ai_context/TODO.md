@@ -312,7 +312,7 @@ Goal: Global UX polish, shared utilities.
 
 Goal: The production-ready `<script>` that users paste into WordPress.
 
-- [ ] **11.1** Write the final IIFE snippet in `api/lib/snippetGenerator.js`. It must:
+- [x] **11.1** Write the final IIFE snippet in `api/lib/snippetGenerator.js`. It must:
   - Save all 5 UTM params to `sessionStorage` on every page load if present in URL
   - Only attach click listener on the configured `triggerPage` (pathname match)
   - Read all configured field IDs from DOM at click time
@@ -321,7 +321,7 @@ Goal: The production-ready `<script>` that users paste into WordPress.
   - Fire only if `utm_source` exists in session (skip untracked visitors — configurable comment in code)
   - Be minification-safe (no reliance on whitespace)
 
-- [ ] **11.2** Manually test the snippet on a WordPress staging site:
+- [x] **11.2** Manually test the snippet on a WordPress staging site:
   - Add UTM params to a page URL, navigate to another page, submit form
   - Confirm conversion appears in dashboard with correct UTMs and captured fields
   - Confirm snippet does NOT break the page when UTMs are absent

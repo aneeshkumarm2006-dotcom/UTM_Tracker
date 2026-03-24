@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page — UTM Snippet Test</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #333; min-height: 100vh; }
+    .nav { background: #fff; border-bottom: 1px solid #ddd; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .nav h1 { font-size: 18px; color: #222; }
+    .nav a { color: #6366f1; text-decoration: none; margin-left: 24px; font-weight: 500; }
+    .container { max-width: 640px; margin: 40px auto; padding: 0 20px; padding-bottom: 80px; }
+    .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 32px; margin-bottom: 24px; }
+    .card h2 { font-size: 22px; margin-bottom: 8px; }
+    .card p { color: #666; margin-bottom: 16px; line-height: 1.6; }
+    .cta-btn { display: inline-block; background: #6366f1; color: white; padding: 12px 32px; font-size: 16px; font-weight: 600; border-radius: 8px; text-decoration: none; transition: background 0.2s; }
+    .cta-btn:hover { background: #4f46e5; }
+
+    .test-info { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; margin-bottom: 24px; font-size: 14px; color: #1e40af; }
+    .test-info h3 { margin-bottom: 8px; }
+    .test-info ol { margin-left: 20px; }
+    .test-info li { margin-bottom: 6px; }
+    .test-info code { background: #dbeafe; padding: 2px 6px; border-radius: 4px; font-size: 12px; word-break: break-all; }
+
+    .debug-panel { background: #1a1d27; color: #a5f3fc; border-radius: 12px; padding: 20px; font-family: 'Courier New', monospace; font-size: 13px; }
+    .debug-panel h3 { color: #f1f5f9; margin-bottom: 12px; font-family: sans-serif; }
+    .debug-panel .entry { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #2a2d3a; }
+    .debug-panel .key { color: #818cf8; }
+    .debug-panel .value { color: #22c55e; }
+    .debug-panel .empty { color: #64748b; font-style: italic; }
+
+    .status-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1d27; color: #f1f5f9; padding: 12px 24px; display: flex; align-items: center; gap: 12px; font-size: 13px; border-top: 1px solid #2a2d3a; z-index: 50; }
+    .status-bar .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .status-bar .dot.green { background: #22c55e; }
+    .status-bar .dot.yellow { background: #f59e0b; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <h1>🧪 Test Site — Landing Page</h1>
+    <div>
+      <a href="/test/snippet-test.html">Home</a>
+      <a href="/test/get-a-quote.html">Get a Quote</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="test-info">
+      <h3>📋 Manual Test Steps</h3>
+      <ol>
+        <li>Start the backend server: <code>cd site/backend && node server.js</code></li>
+        <li>Register a user and configure in the dashboard:
+          <ul style="margin-top:4px;margin-left:16px;">
+            <li>Trigger Page: <code>/test/get-a-quote.html</code></li>
+            <li>Button ID: <code>wpforms-submit-7209</code></li>
+            <li>Fields: name → <code>wpforms-7209-field_1</code>, email → <code>wpforms-7209-field_2</code>, phone → <code>wpforms-7209-field_3</code></li>
+          </ul>
+        </li>
+        <li>Copy the snippet from the Snippet page and paste it into <code>get-a-quote.html</code> and this file</li>
+        <li>Open this page with UTM params:<br>
+          <code>http://localhost:4000/test/snippet-test.html?utm_source=google&utm_medium=cpc&utm_campaign=test-campaign</code>
+        </li>
+        <li>Click "Get a Quote" — UTMs are now in sessionStorage and survive the navigation</li>
+        <li>Fill the form and click Submit</li>
+        <li>Check the dashboard — conversion should appear with correct UTMs and captured fields</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Welcome to Our Agency</h2>
+      <p>This simulates a typical WordPress landing page. The UTM tracking snippet runs here to capture any UTM parameters from the URL and save them to sessionStorage.</p>
+      <p>After visiting this page with UTM params, navigate to the quote page. The UTMs persist across pages via sessionStorage.</p>
+      <a href="/test/get-a-quote.html" class="cta-btn">Get a Quote →</a>
+    </div>
+
+    <div class="debug-panel">
+      <h3>🔍 Debug: sessionStorage State</h3>
+      <div id="debug-entries"><p class="empty">Loading...</p></div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <span class="dot" id="status-dot"></span>
+    <span id="status-text">Checking...</span>
+  </div>
+
+  <script>
+    function updateDebug() {
+      var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+      var html = '', hasAny = false;
+      for (var i = 0; i < keys.length; i++) {
+        var val = sessionStorage.getItem(keys[i]);
+        if (val) hasAny = true;
+        html += '<div class="entry"><span class="key">' + keys[i] + '</span><span class="' + (val ? 'value' : 'empty') + '">' + (val || '(empty)') + '</span></div>';
+      }
+      document.getElementById('debug-entries').innerHTML = html;
+      var dot = document.getElementById('status-dot');
+      var text = document.getElementById('status-text');
+      if (hasAny) { dot.className = 'dot green'; text.textContent = 'UTM params captured ✓ — Now navigate to "Get a Quote"'; }
+      else { dot.className = 'dot yellow'; text.textContent = 'No UTM params — add ?utm_source=google&utm_medium=cpc to URL'; }
+    }
+    updateDebug();
+    setInterval(updateDebug, 1000);
+  </script>
+
+  <!--
+    =============================================
+    PASTE YOUR GENERATED SNIPPET BELOW THIS LINE
+    =============================================
+  -->
+
+</body>
+</html>

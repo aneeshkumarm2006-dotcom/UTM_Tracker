@@ -1,11 +1,15 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
 
 app.use(express.json());
+
+// Serve static test files (for snippet testing only — not for production)
+app.use('/test', express.static(path.join(__dirname, 'test')));
 
 // Apply global CORS allowing only strictly explicitly set trusted origins (for dashboard). 
 // The fully open CORS for snippet tracking will be added later onto its specific route.

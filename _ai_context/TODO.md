@@ -34,11 +34,11 @@ Goal: Monorepo structure with both apps initialized and wired up.
 
 Goal: All Mongoose models defined and connected.
 
-- [ ] **1.1** In `api/`: create `server.js` — sets up Express app, connects Mongoose, loads env, mounts routes, starts server on `PORT`
-- [ ] **1.2** Create `api/models/User.js`:
+- [x] **1.1** In `backend/`: create `server.js` — sets up Express app, connects Mongoose, loads env, mounts routes, starts server on `PORT`
+- [x] **1.2** Create `backend/models/User.js`:
   - Fields: `email` (unique), `password` (bcrypt), `apiKey` (unique, prefixed `usr_`), `config` object (`triggerPage`, `buttonId`, `fields` array of `{ key, id }`)
   - Include `createdAt` timestamp
-- [ ] **1.3** Create `api/models/Conversion.js`:
+- [x] **1.3** Create `backend/models/Conversion.js`:
   - Fields: `userId` (ref to User), `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `captured` (Mixed — stores any key-value pairs from form), `page_url`, `timestamp`
   - Index on `userId` + `timestamp` for fast dashboard queries
 
@@ -48,9 +48,9 @@ Goal: All Mongoose models defined and connected.
 
 Goal: Reusable auth and validation middleware.
 
-- [ ] **2.1** Create `api/middleware/apiKeyAuth.js` — reads `X-API-Key` header, looks up User, attaches to `req.user`, returns 401 if missing or invalid
-- [ ] **2.2** Create `api/middleware/jwtAuth.js` — reads `Authorization: Bearer` header, verifies JWT, attaches `req.user` (contains `id`), returns 401 on failure
-- [ ] **2.3** Create `api/middleware/validate.js` — takes a Zod schema, validates `req.body`, returns 400 with field-level error message on failure
+- [x] **2.1** Create `api/middleware/apiKeyAuth.js` — reads `X-API-Key` header, looks up User, attaches to `req.user`, returns 401 if missing or invalid
+- [x] **2.2** Create `api/middleware/jwtAuth.js` — reads `Authorization: Bearer` header, verifies JWT, attaches `req.user` (contains `id`), returns 401 on failure
+- [x] **2.3** Create `api/middleware/validate.js` — takes a Zod schema, validates `req.body`, returns 400 with field-level error message on failure
 
 ---
 

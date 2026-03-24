@@ -58,12 +58,12 @@ Goal: Reusable auth and validation middleware.
 
 Goal: All API endpoints implemented and tested.
 
-- [ ] **3.1** Create `api/routes/auth.js`:
+- [x] **3.1** Create `api/routes/auth.js`:
   - `POST /api/auth/register` — validate email+password, bcrypt hash, generate `usr_` API key via `crypto.randomBytes(20).toString('hex')`, create User, return `{ apiKey }`
   - `POST /api/auth/login` — validate credentials, return `{ token, apiKey }`
   - Rate limit login to 10 req/min per IP
 
-- [ ] **3.2** Create `api/routes/track.js`:
+- [x] **3.2** Create `api/routes/track.js`:
   - `POST /api/track` — protected by `apiKeyAuth`
   - Destructure `utm_*`, `page_url`, `timestamp` from body; put everything else into `captured` object
   - Save new Conversion document
@@ -71,7 +71,7 @@ Goal: All API endpoints implemented and tested.
   - Apply CORS fully open on this route only (any origin — snippet calls come from client sites)
   - Rate limit to 100 req/min per API key
 
-- [ ] **3.3** Create `api/routes/dashboard.js` — all routes protected by `jwtAuth`:
+- [x] **3.3** Create `api/routes/dashboard.js` — all routes protected by `jwtAuth`:
   - `GET /api/dashboard/conversions` — supports query params: `source`, `from`, `to`, `limit` (default 50, max 500), `page`; returns `{ total, page, limit, conversions[] }`
   - `GET /api/dashboard/conversions/export` — same filters, returns CSV response with dynamic columns for all captured field keys found in the dataset
   - `GET /api/dashboard/config` — returns user's current config object
@@ -80,12 +80,12 @@ Goal: All API endpoints implemented and tested.
   - `GET /api/dashboard/apikey` — returns `{ apiKey }`
   - `POST /api/dashboard/apikey/regenerate` — generates new API key, saves, invalidates old, returns `{ apiKey, warning }`
 
-- [ ] **3.4** Create `api/lib/snippetGenerator.js`:
+- [x] **3.4** Create `api/lib/snippetGenerator.js`:
   - Takes `(apiKey, config, baseUrl)` as arguments
   - Returns the full IIFE `<script>` string with values interpolated
   - The script must include: `saveUTM()` on every page, `DOMContentLoaded` listener, trigger page check, button click listener, silent `fetch` POST to `/api/track`
 
-- [ ] **3.5** Mount all routes in `server.js` at correct paths, apply global CORS (allow `ALLOWED_ORIGINS`), apply `express.json()`
+- [x] **3.5** Mount all routes in `server.js` at correct paths, apply global CORS (allow `ALLOWED_ORIGINS`), apply `express.json()`
 
 ---
 

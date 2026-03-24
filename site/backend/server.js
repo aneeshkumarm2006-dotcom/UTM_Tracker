@@ -12,7 +12,14 @@ app.use(express.json());
 const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
 app.use(cors({ origin: allowedOrigins }));
 
-// API routes will be mounted here in Stage 3
+// --- Mount routes ---
+const authRoutes = require('./routes/auth');
+const trackRoutes = require('./routes/track');
+const dashboardRoutes = require('./routes/dashboard');
+
+app.use('/api/auth', authRoutes);
+app.use('/api/track', trackRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 const PORT = process.env.PORT || 4000;
 const MONGO_URI = process.env.MONGO_URI;

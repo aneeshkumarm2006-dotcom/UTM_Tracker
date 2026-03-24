@@ -109,23 +109,23 @@ Goal: Confirm every endpoint works before touching the frontend.
 
 Goal: React app routing, auth state, and API client wired up.
 
-- [ ] **5.1** Create `dashboard/src/lib/api.js` — Axios instance with:
+- [x] **5.1** Create `dashboard/src/lib/api.js` — Axios instance with:
   - `baseURL` from `VITE_API_BASE_URL`
   - Request interceptor: injects `Authorization: Bearer <token>` from Zustand store on every request
   - Response interceptor: on 401, clears auth state and redirects to `/login`
 
-- [ ] **5.2** Create `dashboard/src/lib/auth.js` — Zustand store with:
+- [x] **5.2** Create `dashboard/src/lib/auth.js` — Zustand store with:
   - State: `token`, `apiKey`, `isAuthenticated`
   - Actions: `login(token, apiKey)`, `logout()`, `setApiKey(key)`
   - Persist to `localStorage`
 
-- [ ] **5.3** Create `dashboard/src/hooks/useAuth.js` — exposes store state + actions, adds `isLoading` for initial hydration
+- [x] **5.3** Create `dashboard/src/hooks/useAuth.js` — exposes store state + actions, adds `isLoading` for initial hydration
 
-- [ ] **5.4** Create `dashboard/src/hooks/useConversions.js` — React Query hook wrapping `GET /api/dashboard/conversions`, supports filter params
+- [x] **5.4** Create `dashboard/src/hooks/useConversions.js` — React Query hook wrapping `GET /api/dashboard/conversions`, supports filter params
 
-- [ ] **5.5** Create `dashboard/src/hooks/useConfig.js` — React Query hooks for `GET` and `POST /api/dashboard/config`
+- [x] **5.5** Create `dashboard/src/hooks/useConfig.js` — React Query hooks for `GET` and `POST /api/dashboard/config`
 
-- [ ] **5.6** Set up React Router in `App.jsx`:
+- [x] **5.6** Set up React Router in `App.jsx`:
   - Public routes: `/`, `/login`, `/register`
   - Protected routes (redirect to `/login` if not authenticated): `/dashboard`, `/dashboard/configure`, `/dashboard/snippet`, `/dashboard/apikey`
   - Create `<ProtectedRoute>` wrapper component

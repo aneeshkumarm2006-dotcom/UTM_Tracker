@@ -93,15 +93,15 @@ Goal: All API endpoints implemented and tested.
 
 Goal: Confirm every endpoint works before touching the frontend.
 
-- [ ] **4.1** Start server locally, connect to MongoDB Atlas (or local MongoDB)
-- [ ] **4.2** Test `POST /api/auth/register` — creates user, returns API key
-- [ ] **4.3** Test `POST /api/auth/login` — returns JWT + API key
-- [ ] **4.4** Test `POST /api/track` with `X-API-Key` header and a mix of UTM + custom captured fields
-- [ ] **4.5** Test `GET /api/dashboard/conversions` — verify the conversion from 4.4 appears with correct `captured` object
-- [ ] **4.6** Test `POST /api/dashboard/config` — save a config with 3 field mappings
-- [ ] **4.7** Test `GET /api/dashboard/snippet` — confirm the returned script contains the API key, triggerPage, buttonId, and field IDs
-- [ ] **4.8** Test `GET /api/dashboard/conversions/export` — confirm CSV downloads with correct columns
-- [ ] **4.9** Test `POST /api/dashboard/apikey/regenerate` — confirm old key stops working, new key works
+- [x] **4.1** Start server locally, connect to MongoDB Atlas (or local MongoDB)
+- [x] **4.2** Test `POST /api/auth/register` — creates user, returns API key
+- [x] **4.3** Test `POST /api/auth/login` — returns JWT + API key
+- [x] **4.4** Test `POST /api/track` with `X-API-Key` header and a mix of UTM + custom captured fields
+- [x] **4.5** Test `GET /api/dashboard/conversions` — verify the conversion from 4.4 appears with correct `captured` object
+- [x] **4.6** Test `POST /api/dashboard/config` — save a config with 3 field mappings
+- [x] **4.7** Test `GET /api/dashboard/snippet` — confirm the returned script contains the API key, triggerPage, buttonId, and field IDs
+- [x] **4.8** Test `GET /api/dashboard/conversions/export` — confirm CSV downloads with correct columns
+- [x] **4.9** Test `POST /api/dashboard/apikey/regenerate` — confirm old key stops working, new key works
 
 ---
 

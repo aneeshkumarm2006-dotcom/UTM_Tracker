@@ -7,12 +7,16 @@ const validate = (schema) => {
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        // Return 400 with field-level error message
-        const firstError = error.errors[0];
-        return res.status(400).json({
-          error: firstError.message,
-          field: firstError.path.join('.')
-        });
+        // Zod v4 uses .issues instead of .errors
+        const issues = error.issues || error.errors || [];
+        const firstError = issues[0];
+        if (firstError) {
+          return res.status(400).json({
+            error: firstError.message,
+            field: (firstError.path || []).join('.')
+          });
+        }
+        return res.status(400).json({ error: 'Validation failed' });
       }
       return res.status(500).json({ error: 'Internal validation error' });
     }

@@ -220,28 +220,28 @@ Goal: All four dashboard views functional.
 
 ### Overview (Conversions Table)
 
-- [ ] **9.1** Create `src/pages/dashboard/Overview.jsx`:
+- [x] **9.1** Create `src/pages/dashboard/Overview.jsx`:
   - Page heading: "Conversions" + `Export CSV` button (right)
   - Filter bar: Source dropdown, Date Range picker (from/to)
   - Table with columns: Timestamp, Source (badge), Medium, Campaign, Captured ↗
   - Clicking a row expands a sub-row showing all `captured` key-value pairs as pills
   - Pagination: prev/next, 50 rows per page
 
-- [ ] **9.2** Create `src/components/UtmBadge.jsx`:
+- [x] **9.2** Create `src/components/UtmBadge.jsx`:
   - Renders colored badge per source: google=blue, meta=indigo, chatgpt=teal, others=grey
   - Lowercase, pill shape, small
 
-- [ ] **9.3** Create `src/components/ConversionRow.jsx`:
+- [x] **9.3** Create `src/components/ConversionRow.jsx`:
   - Table row + expandable captured fields sub-row
   - Expand/collapse toggle on row click
 
-- [ ] **9.4** Empty state: illustration (SVG inline) + "No conversions yet. Paste your snippet to start tracking."
+- [x] **9.4** Empty state: illustration (SVG inline) + "No conversions yet. Paste your snippet to start tracking."
 
-- [ ] **9.5** Wire `Export CSV` button to `GET /api/dashboard/conversions/export` — trigger file download via creating a blob URL
+- [x] **9.5** Wire `Export CSV` button to `GET /api/dashboard/conversions/export` — trigger file download via creating a blob URL
 
 ### Configure
 
-- [ ] **9.6** Create `src/pages/dashboard/Configure.jsx`:
+- [x] **9.6** Create `src/pages/dashboard/Configure.jsx`:
   - Load current config via `useConfig` hook on mount (pre-fill fields)
   - Input: Trigger Page Pathname
   - Input: Submit Button DOM ID
@@ -253,14 +253,14 @@ Goal: All four dashboard views functional.
   - Success toast: "Configuration saved ✓"
   - Warn if saved while fields are empty
 
-- [ ] **9.7** Create `src/components/FieldRow.jsx`:
+- [x] **9.7** Create `src/components/FieldRow.jsx`:
   - Single row in the field mapping table
   - Two text inputs (key, id) + trash `X` button
   - On key input: auto-lowercase, no spaces (enforce on change)
 
 ### Snippet
 
-- [ ] **9.8** Create `src/pages/dashboard/Snippet.jsx`:
+- [x] **9.8** Create `src/pages/dashboard/Snippet.jsx`:
   - Fetch snippet from `GET /api/dashboard/snippet`
   - Show warning banner if config not saved: "⚠ Save your configuration first"
   - Code block: full snippet, syntax highlighted, monospace, dark background
@@ -271,7 +271,7 @@ Goal: All four dashboard views functional.
     3. Set Location: Site Wide Header
     4. Activate
 
-- [ ] **9.9** Create `src/components/CodeBlock.jsx`:
+- [x] **9.9** Create `src/components/CodeBlock.jsx`:
   - Reusable: takes `code` string + optional `language` prop
   - Uses Shiki for syntax highlighting (or Prism as fallback)
   - Copy button in top-right corner
@@ -279,13 +279,13 @@ Goal: All four dashboard views functional.
 
 ### API Key
 
-- [ ] **9.10** Create `src/pages/dashboard/ApiKey.jsx`:
+- [x] **9.10** Create `src/pages/dashboard/ApiKey.jsx`:
   - Load key from `GET /api/dashboard/apikey`
   - Masked display: `usr_4fa3...b91c` with eye toggle to reveal full key
   - Copy button
   - `Regenerate Key` button → opens `<ConfirmModal>`
 
-- [ ] **9.11** Create `src/components/ConfirmModal.jsx`:
+- [x] **9.11** Create `src/components/ConfirmModal.jsx`:
   - shadcn `AlertDialog` wrapper
   - Takes `title`, `description`, `onConfirm`, `onCancel` props
   - Used for API key regeneration — body text: "This will break any existing snippets using the old key."

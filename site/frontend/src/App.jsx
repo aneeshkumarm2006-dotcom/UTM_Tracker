@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
 // Public pages
@@ -36,6 +37,16 @@ export default function App() {
         {/* Catch-all → redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: 'var(--bg-surface)',
+            border: '1px solid var(--bg-border)',
+            color: 'var(--text-primary)',
+          },
+        }}
+      />
     </BrowserRouter>
   );
 }

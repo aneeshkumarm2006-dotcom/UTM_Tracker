@@ -115,3 +115,21 @@
         scroll-behavior: smooth;
     }
 }
+
+/* Shiki code block overrides */
+.codeblock-shiki pre {
+    background: transparent !important;
+    margin: 0;
+    padding: 0;
+}
+
+.codeblock-shiki code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8125rem;
+    line-height: 1.7;
+}
+
+/* Date input icon fix for dark mode */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+}

@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useConfig, useSaveConfig } from '@/hooks/useConfig';
 import FieldRow from '@/components/FieldRow';
 import PageTitle from '@/components/PageTitle';
-import { Plus, Save, AlertTriangle, Loader2, Check } from 'lucide-react';
+import { Plus, Save, AlertTriangle, Loader2, Check, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Configure() {
+  const navigate = useNavigate();
+
   const { data: config, isLoading: configLoading } = useConfig();
   const saveConfig = useSaveConfig({
     onSuccess: () => {
-      toast.success('Configuration saved ✓');
+      toast.success('Configuration saved ✓ — Redirecting to your snippet…');
+      // Navigate to the snippet page with the template fields after save
+      setTimeout(() => navigate('/dashboard/snippet'), 800);
     },
     onError: (err) => {
       toast.error(err?.response?.data?.error || 'Failed to save configuration');
@@ -82,7 +87,7 @@ export default function Configure() {
     <div className="space-y-8 max-w-2xl">
       <PageTitle
         title="Configure"
-        description="Set your trigger page, button ID and field mappings."
+        description="Set your conversion page, button ID and field mappings."
       />
 
       {/* Header */}
@@ -91,8 +96,27 @@ export default function Configure() {
           Configuration
         </h2>
         <p className="text-sm text-[var(--text-muted)] mt-1">
-          Set your trigger page, button ID, and field mappings. Your snippet will use these values.
+          Define the page where your form lives, the submit button ID, and the form fields to capture. UTM parameters are stored in session cookies automatically.
         </p>
+      </div>
+
+      {/* How it works info */}
+      <div className="p-4 rounded-xl bg-[var(--accent-indigo)]/5 border border-[var(--accent-indigo)]/15">
+        <h3 className="text-sm font-semibold text-[var(--accent-indigo)] mb-2">How it works</h3>
+        <ol className="space-y-1.5 text-sm text-[var(--text-muted)]">
+          <li className="flex items-start gap-2">
+            <span className="shrink-0 w-5 h-5 rounded-full bg-[var(--accent-indigo)]/10 flex items-center justify-center text-xs font-bold text-[var(--accent-indigo)]">1</span>
+            <span>Visitor lands on <strong className="text-[var(--text-primary)]">any page</strong> with UTM params → stored in session cookies</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="shrink-0 w-5 h-5 rounded-full bg-[var(--accent-indigo)]/10 flex items-center justify-center text-xs font-bold text-[var(--accent-indigo)]">2</span>
+            <span>Visitor navigates to the <strong className="text-[var(--text-primary)]">trigger page</strong> and fills out the form</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="shrink-0 w-5 h-5 rounded-full bg-[var(--accent-indigo)]/10 flex items-center justify-center text-xs font-bold text-[var(--accent-indigo)]">3</span>
+            <span>On <strong className="text-[var(--text-primary)]">button click</strong>: form fields + UTM data are sent to your dashboard</span>
+          </li>
+        </ol>
       </div>
 
       {/* Config Form */}
@@ -110,7 +134,7 @@ export default function Configure() {
             className="w-full px-4 py-3 rounded-xl bg-[var(--bg-base)] border border-[var(--bg-border)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-indigo)] focus:border-transparent transition-all"
           />
           <p className="text-xs text-[var(--text-muted)] mt-1.5">
-            The page where your form lives, e.g. <code className="text-[var(--code-text)]">/get-a-quote/</code>
+            The page where your conversion form lives, e.g. <code className="text-[var(--code-text)]">/get-a-quote/</code>
           </p>
         </div>
 
@@ -127,7 +151,7 @@ export default function Configure() {
             className="w-full px-4 py-3 rounded-xl bg-[var(--bg-base)] border border-[var(--bg-border)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-indigo)] focus:border-transparent transition-all"
           />
           <p className="text-xs text-[var(--text-muted)] mt-1.5">
-            The HTML <code className="text-[var(--code-text)]">id</code> attribute of the submit button on your form.
+            The HTML <code className="text-[var(--code-text)]">id</code> attribute of the submit/conversion button on your form.
           </p>
         </div>
 
@@ -194,11 +218,20 @@ export default function Configure() {
         {saveConfig.isPending ? (
           <Loader2 className="w-4 h-4 animate-spin" />
         ) : saveConfig.isSuccess ? (
-          <Check className="w-4 h-4" />
+          <>
+            <Check className="w-4 h-4" />
+          </>
         ) : (
           <Save className="w-4 h-4" />
         )}
-        {saveConfig.isPending ? 'Saving...' : 'Save Configuration'}
+        {saveConfig.isPending
+          ? 'Saving...'
+          : saveConfig.isSuccess
+            ? 'Saved — Going to Snippet…'
+            : 'Save & Get Snippet'}
+        {!saveConfig.isPending && !saveConfig.isSuccess && (
+          <ArrowRight className="w-4 h-4 ml-1" />
+        )}
       </button>
     </div>
   );

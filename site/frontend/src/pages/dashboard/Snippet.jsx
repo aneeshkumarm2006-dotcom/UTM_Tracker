@@ -1,12 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
+import { useConfig } from '@/hooks/useConfig';
 import api from '@/lib/api';
 import CodeBlock from '@/components/CodeBlock';
 import PageTitle from '@/components/PageTitle';
-import { AlertTriangle, Copy, Check, Loader2 } from 'lucide-react';
+import { AlertTriangle, Copy, Check, Loader2, Globe, MousePointerClick, Table2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Snippet() {
   const [copied, setCopied] = useState(false);
+
+  const { data: config, isLoading: configLoading } = useConfig();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['snippet'],
@@ -31,7 +34,7 @@ export default function Snippet() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || configLoading) {
     return (
       <div className="space-y-6">
         <div className="h-8 w-48 bg-[var(--bg-surface)] rounded-lg animate-pulse" />
@@ -68,6 +71,66 @@ export default function Snippet() {
             <p className="text-sm text-[var(--warn)]/80 mt-0.5">
               Save your configuration first before generating a snippet. Go to the Configure page to set up your trigger page, button ID, and field mappings.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* Template Fields Summary — shows what config was used */}
+      {config && config.triggerPage && (
+        <div className="rounded-xl border border-[var(--bg-border)] bg-[var(--bg-surface)] p-5">
+          <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
+            <Table2 className="w-4 h-4 text-[var(--accent-indigo)]" />
+            Template Configuration
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Trigger Page */}
+            <div className="flex items-start gap-3 p-3 rounded-lg bg-[var(--bg-base)] border border-[var(--bg-border)]">
+              <Globe className="w-4 h-4 text-[var(--accent-indigo)] shrink-0 mt-0.5" />
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                  Trigger Page
+                </p>
+                <p className="text-sm text-[var(--text-primary)] font-mono mt-1">
+                  {config.triggerPage || '—'}
+                </p>
+              </div>
+            </div>
+
+            {/* Button ID */}
+            <div className="flex items-start gap-3 p-3 rounded-lg bg-[var(--bg-base)] border border-[var(--bg-border)]">
+              <MousePointerClick className="w-4 h-4 text-[var(--accent-indigo)] shrink-0 mt-0.5" />
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                  Button DOM ID
+                </p>
+                <p className="text-sm text-[var(--text-primary)] font-mono mt-1">
+                  {config.buttonId || '—'}
+                </p>
+              </div>
+            </div>
+
+            {/* Field Mappings */}
+            <div className="flex items-start gap-3 p-3 rounded-lg bg-[var(--bg-base)] border border-[var(--bg-border)] sm:col-span-2">
+              <Table2 className="w-4 h-4 text-[var(--accent-indigo)] shrink-0 mt-0.5" />
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                  Field Mappings
+                </p>
+                <div className="mt-1 space-y-1">
+                  {config.fields && config.fields.length > 0 ? (
+                    config.fields.map((f, i) => (
+                      <p key={i} className="text-sm text-[var(--text-primary)] font-mono">
+                        <span className="text-[var(--code-text)]">{f.key}</span>
+                        <span className="text-[var(--text-muted)] mx-1">→</span>
+                        <span className="text-[var(--text-muted)]">{f.id}</span>
+                      </p>
+                    ))
+                  ) : (
+                    <p className="text-sm text-[var(--text-muted)]">—</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -1,14 +1,13 @@
 /**
- * Generates the production-ready IIFE <script> tag that users paste into WordPress.
+ * Generates the production-ready <script> tag that users paste into their website.
  *
- * Requirements met:
- *  - Saves all 5 UTM params to sessionStorage on every page load if present in URL
+ * Pattern:
+ *  - On ANY page load: if UTM params exist in URL, save them as session cookies
  *  - Only attaches click listener on the configured triggerPage (pathname match)
- *  - Reads all configured field IDs from DOM at click time
- *  - Sends POST /api/track with X-API-Key header, UTMs, captured fields, page_url, timestamp
- *  - Wrapped in try-catch — never throws, always silent-fails
- *  - Fires only if utm_source exists in session (skip untracked visitors)
- *  - Minification-safe (no reliance on whitespace, uses var for max compat)
+ *  - On button click: reads configured field IDs from DOM + UTM cookies
+ *  - POSTs conversion data to the platform's /api/track endpoint
+ *  - Wrapped in DOMContentLoaded — never throws, always silent-fails
+ *  - Fires only if utm_source exists in cookies (skip untracked visitors)
  *
  * @param {string} apiKey - The user's API key (usr_...)
  * @param {object} config - { triggerPage, buttonId, fields: [{ key, id }] }
@@ -31,83 +30,104 @@ function generateSnippet(apiKey, config, baseUrl) {
   );
 
   return `<script>
-/* UTM Conversion Tracker v1.0 — https://trackutm.app */
-(function(){
-try{
-var API_KEY='${safeApiKey}';
-var TRACK_URL='${trackUrl}';
-var TRIGGER_PAGE='${safeTriggerPage}';
-var BUTTON_ID='${safeButtonId}';
-var FIELDS=${safeFields};
-var UTM_KEYS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
-var SS=window.sessionStorage;
+/* UTM Conversion Tracker v3.0 — https://trackutm.app */
+document.addEventListener('DOMContentLoaded', function () {
+  var API_KEY = '${safeApiKey}';
+  var TRACK_URL = '${trackUrl}';
+  var TRIGGER_PAGE = '${safeTriggerPage}';
+  var BUTTON_ID = '${safeButtonId}';
+  var FIELDS = ${safeFields};
+  var UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
 
-/* Step 1: Save UTM params to sessionStorage on every page load */
-function saveUTM(){
-try{
-var p=new URLSearchParams(window.location.search);
-for(var i=0;i<UTM_KEYS.length;i++){
-var v=p.get(UTM_KEYS[i]);
-if(v){SS.setItem(UTM_KEYS[i],v);}
-}
-}catch(e){}
-}
+  /* ── Cookie helpers ── */
+  function setCookie(name, value) {
+    document.cookie = name + '=' + encodeURIComponent(value) + '; path=/; SameSite=Lax';
+  }
 
-/* Step 2: Normalize pathname for comparison (strip trailing slash, lowercase) */
-function normPath(p){
-if(!p||p==='/'){return '/';}
-return p.replace(/\\/+$/,'').toLowerCase();
-}
+  function getCookie(name) {
+    var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+    return match ? decodeURIComponent(match[1]) : '';
+  }
 
-/* Step 3: On configured trigger page, listen for button click */
-function attachListener(){
-try{
-if(normPath(window.location.pathname)!==normPath(TRIGGER_PAGE)){return;}
-var btn=document.getElementById(BUTTON_ID);
-if(!btn){return;}
-btn.addEventListener('click',function(){
-try{
-/* Only fire if utm_source exists in session — skip untracked visitors */
-/* To track ALL visitors regardless of UTM, remove this guard: */
-var utmSource=SS.getItem('utm_source');
-if(!utmSource){return;}
+  /* STEP 1: On ANY page, if UTM params exist in URL, save them as session cookies */
+  function saveUTMParameters() {
+    try {
+      var urlParams = new URLSearchParams(window.location.search);
+      var source = urlParams.get('utm_source');
+      if (source) {
+        for (var i = 0; i < UTM_KEYS.length; i++) {
+          var val = urlParams.get(UTM_KEYS[i]);
+          if (val) setCookie(UTM_KEYS[i], val);
+        }
+      }
+    } catch (e) {}
+  }
 
-var payload={
-utm_source:utmSource,
-utm_medium:SS.getItem('utm_medium')||'',
-utm_campaign:SS.getItem('utm_campaign')||'',
-utm_content:SS.getItem('utm_content')||'',
-utm_term:SS.getItem('utm_term')||'',
-page_url:window.location.href,
-timestamp:new Date().toISOString()
-};
+  /* STEP 2: Read UTM params from cookies */
+  function getUTMParameters() {
+    var params = {};
+    for (var i = 0; i < UTM_KEYS.length; i++) {
+      params[UTM_KEYS[i]] = getCookie(UTM_KEYS[i]);
+    }
+    return params;
+  }
 
-/* Read configured field values from the DOM at click time */
-for(var i=0;i<FIELDS.length;i++){
-var el=document.getElementById(FIELDS[i].id);
-payload[FIELDS[i].key]=el&&el.value?el.value:'';
-}
+  /* STEP 3: Read configured form field values from DOM */
+  function getFormData() {
+    var data = {};
+    for (var i = 0; i < FIELDS.length; i++) {
+      var el = document.getElementById(FIELDS[i].id);
+      data[FIELDS[i].key] = el ? el.value.trim() : '';
+    }
+    return data;
+  }
 
-/* Send tracking data — silent fail, keepalive for page navigation */
-fetch(TRACK_URL,{
-method:'POST',
-headers:{'Content-Type':'application/json','X-API-Key':API_KEY},
-body:JSON.stringify(payload),
-keepalive:true
-}).catch(function(){});
-}catch(e){}
+  /* STEP 4: Send conversion data to platform API */
+  function sendConversionData(utmParams) {
+    var formData = getFormData();
+
+    var payload = {
+      utm_source: utmParams.utm_source || '',
+      utm_medium: utmParams.utm_medium || '',
+      utm_campaign: utmParams.utm_campaign || '',
+      utm_content: utmParams.utm_content || '',
+      utm_term: utmParams.utm_term || '',
+      page_url: window.location.href,
+      timestamp: new Date().toISOString()
+    };
+
+    /* Add all captured form fields */
+    var fieldKeys = Object.keys(formData);
+    for (var i = 0; i < fieldKeys.length; i++) {
+      payload[fieldKeys[i]] = formData[fieldKeys[i]];
+    }
+
+    fetch(TRACK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+      body: JSON.stringify(payload),
+      keepalive: true
+    })
+      .then(function () { console.log('✅ Conversion tracked'); })
+      .catch(function () { console.log('⚠️ Tracking failed'); });
+  }
+
+  /* STEP 5: Always save UTMs on every page load */
+  saveUTMParameters();
+
+  /* STEP 6: Only listen for form submit on the trigger page */
+  if (window.location.pathname.includes(TRIGGER_PAGE)) {
+    var utmParams = getUTMParameters();
+    if (utmParams.utm_source) {
+      var submitButton = document.getElementById(BUTTON_ID);
+      if (submitButton) {
+        submitButton.addEventListener('click', function () {
+          sendConversionData(utmParams);
+        });
+      }
+    }
+  }
 });
-}catch(e){}
-}
-
-saveUTM();
-if(document.readyState==='loading'){
-document.addEventListener('DOMContentLoaded',attachListener);
-}else{
-attachListener();
-}
-}catch(e){}
-})();
 </script>`;
 }
 

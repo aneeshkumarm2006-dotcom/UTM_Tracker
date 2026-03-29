@@ -160,7 +160,7 @@ export default function Snippet() {
                 )}
               </button>
             </div>
-            <CodeBlock code={snippet} language="html" />
+            <CodeBlock code={snippet} language="javascript" />
           </div>
 
           {/* How to Install */}

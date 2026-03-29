@@ -29,8 +29,7 @@ function generateSnippet(apiKey, config, baseUrl) {
     }))
   );
 
-  return `<script>
-/* UTM Conversion Tracker v3.0 — https://trackutm.app */
+  return `/* UTM Conversion Tracker v3.0 — https://trackutm.app */
 document.addEventListener('DOMContentLoaded', function () {
   var API_KEY = '${safeApiKey}';
   var TRACK_URL = '${trackUrl}';
@@ -127,8 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   }
-});
-</script>`;
+});`;
 }
 
 /**

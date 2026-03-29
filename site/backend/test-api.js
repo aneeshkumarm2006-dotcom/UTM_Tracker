@@ -267,8 +267,7 @@ async function test_4_7_Snippet() {
 
   assert(status === 200, `Status 200 (got ${status})`);
   assert(typeof data.snippet === 'string', 'snippet is a string');
-  assert(data.snippet.includes('<script>'), 'Contains <script> tag');
-  assert(data.snippet.includes('</script>'), 'Contains </script> closing tag');
+  assert(data.snippet.includes('/* UTM Conversion Tracker'), 'Contains UTM header comment');
   assert(data.snippet.includes(apiKey), 'Contains the API key');
   assert(data.snippet.includes('/get-a-quote/'), 'Contains triggerPage');
   assert(data.snippet.includes('wpforms-submit-7209'), 'Contains buttonId');

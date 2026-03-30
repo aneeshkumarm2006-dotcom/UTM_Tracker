@@ -16,6 +16,11 @@ app.use('/test', express.static(path.join(__dirname, 'test')));
 const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
 app.use(cors({ origin: allowedOrigins }));
 
+// --- Health check (wakes Render free tier before form submit) ---
+app.get('/api/health', (req, res) => {
+  res.json({ ok: true, ts: Date.now() });
+});
+
 // --- Mount routes ---
 const authRoutes = require('./routes/auth');
 const trackRoutes = require('./routes/track');

@@ -3,6 +3,7 @@
  *
  * Pattern:
  *  - On ANY page load: if UTM params exist in URL, save them as session cookies
+ *  - Pings /api/health on the trigger page to wake the server before form submit
  *  - Only attaches click listener on the configured triggerPage (pathname match)
  *  - On button click: reads configured field IDs from DOM + UTM cookies
  *  - POSTs conversion data to the platform's /api/track endpoint
@@ -20,6 +21,7 @@ function generateSnippet(apiKey, config, baseUrl) {
   const safeTriggerPage = escapeForJS(config.triggerPage);
   const safeButtonId = escapeForJS(config.buttonId);
   const trackUrl = escapeForJS(baseUrl.replace(/\/$/, '') + '/api/track');
+  const healthUrl = escapeForJS(baseUrl.replace(/\/$/, '') + '/api/health');
 
   // Build the fields array as a safe JSON string
   const safeFields = JSON.stringify(
@@ -29,10 +31,11 @@ function generateSnippet(apiKey, config, baseUrl) {
     }))
   );
 
-  return `/* UTM Conversion Tracker v3.0 — https://trackutm.app */
+  return `/* UTM Conversion Tracker v3.1 — https://trackutm.app */
 document.addEventListener('DOMContentLoaded', function () {
   var API_KEY = '${safeApiKey}';
   var TRACK_URL = '${trackUrl}';
+  var HEALTH_URL = '${healthUrl}';
   var TRIGGER_PAGE = '${safeTriggerPage}';
   var BUTTON_ID = '${safeButtonId}';
   var FIELDS = ${safeFields};
@@ -40,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ── Cookie helpers ── */
   function setCookie(name, value) {
-    document.cookie = name + '=' + encodeURIComponent(value) + '; path=/; SameSite=Lax';
+    document.cookie = name + '=' + encodeURIComponent(value) + '; path=/; max-age=2592000; SameSite=Lax';
   }
 
   function getCookie(name) {
@@ -48,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return match ? decodeURIComponent(match[1]) : '';
   }
 
-  /* STEP 1: On ANY page, if UTM params exist in URL, save them as session cookies */
+  /* STEP 1: On ANY page, if UTM params exist in URL, save them as cookies (30 days) */
   function saveUTMParameters() {
     try {
       var urlParams = new URLSearchParams(window.location.search);
@@ -107,15 +110,21 @@ document.addEventListener('DOMContentLoaded', function () {
       body: JSON.stringify(payload),
       keepalive: true
     })
-      .then(function () { console.log('✅ Conversion tracked'); })
-      .catch(function () { console.log('⚠️ Tracking failed'); });
+      .then(function () { console.log('\\u2705 Conversion tracked'); })
+      .catch(function () { console.log('\\u26a0\\ufe0f Tracking failed'); });
   }
 
   /* STEP 5: Always save UTMs on every page load */
   saveUTMParameters();
 
-  /* STEP 6: Only listen for form submit on the trigger page */
+  /* STEP 6: On the trigger page — wake server early + attach submit listener */
   if (window.location.pathname.includes(TRIGGER_PAGE)) {
+
+    /* Wake up Render free-tier server so it is ready when user clicks submit */
+    try {
+      fetch(HEALTH_URL, { method: 'GET' }).catch(function () {});
+    } catch (e) {}
+
     var utmParams = getUTMParameters();
     if (utmParams.utm_source) {
       var submitButton = document.getElementById(BUTTON_ID);
